@@ -1,7 +1,7 @@
 def cube (x: Int): Int =
   x * x * x
 
-val cube2= (x: Int) => x * x * x
+val cube2 = (x: Int) => x * x * x
 val cube2Result = cube2(2)
 val cube3: Int => Int = (x: Int) => x * x * x
 val cube3Result = cube3(3)
