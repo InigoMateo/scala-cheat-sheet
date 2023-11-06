@@ -89,6 +89,7 @@ def add(a: Double, b: Double): Double = a + b
 }
 
  ```
+These concepts lead into *polymorphism* this main concepts allows you to write code that works with objects of different classes without needing to know the exact class at compile time. It allows objects of different classes to be treated as objects of a common superclass or interface.
 ### **What is a constructor?**
 A constructor in object-oriented programming is a special type of method or function that is used to initialize and set up the initial state of an object when it is created. Constructors are typically associated with classes and are invoked automatically when an instance of a class (an object) is created.In summary, constructors are essential in object-oriented programming because they ensure that objects are properly initialized, encapsulate initialization logic, promote consistency, and simplify the process of creating and using objects.
   ``` scala
@@ -109,4 +110,107 @@ object Person {
   }
 }
 ```
-### **WWhat is **
+### **What is an auxiliary constructor?**
+In Scala, an auxiliary constructor, also known as a secondary constructor, is a constructor in a class that complements the primary constructor. Auxiliary constructors allow you to provide alternative ways to initialize an object of the class with different sets of parameters.
+``` scala
+class Person {
+  var name: String = ""
+  var age: Int = 0
+
+  def this(name: String) {
+    this() // Calls the primary constructor
+    this.name = name
+  }
+
+  def this(name: String, age: Int) {
+    this(name) // Calls the previous auxiliary constructor
+    this.age = age
+  }
+
+  override def toString: String = s"Name: $name, Age: $age"
+}
+
+object Main {
+  def main(args: Array[String]): Unit = {
+    val person1 = new Person("Alice")
+    val person2 = new Person("Bob", 30)
+
+    println(person1) // Output: Name: Alice, Age: 0
+    println(person2) // Output: Name: Bob, Age: 30
+  }
+}
+```
+### **What are the getter and the setters in a class?**
+In object-oriented programming, "getters" and "setters" are methods used to access and modify the attributes or fields (variables) of a class, respectively. Getters are used to retrieve the values of class attributes, while setters are used to change or update those values. They are also known as accessor methods and mutator methods, respectively.
+* **Getters:**
+Getters are methods that provide access to the private or protected attributes of a class.
+``` scala
+class Person {
+  private var name: String = ""
+
+  def getName: String = name // Getter method for 'name' attribute
+}
+```
+* **Setters:**
+Setters are methods that allow you to modify the values of private or protected attributes of a class.
+``` scala
+class Person {
+  private var name: String = ""
+
+  def setName(newName: String): Unit = {
+    name = newName // Setter method for 'name' attribute
+  }
+}
+```
+### **What is the use of the keywords "this" and "super"?**
+The "this" and "super" keywords are used in class and method definitions to refer to specific objects or to access methods or attributes in the context of inheritance.
+* **This:**
+  In Java and similar languages, "this" refers to the current instance of the class in which it is used. It is typically used to access instance variables or call instance methods within a class. "this" is often used to disambiguate between instance variables and method parameters when they have the same name.
+``` java
+public class MyClass {
+    private int value;
+
+    public MyClass(int value) {
+        this.value = value; // "this" is used to refer to the instance variable
+    }
+}
+```
+* **Super:**
+"super" is used to refer to the immediate parent class (superclass) of the current class in the context of inheritance. It is often used to call a method or access an attribute defined in the parent class.
+``` java
+class Parent {
+    void display() {
+        System.out.println("This is the parent class.");
+    }
+}
+
+class Child extends Parent {
+    void display() {
+        super.display(); // Calls the "display" method in the parent class
+        System.out.println("This is the child class.");
+    }
+}
+```
+### Difference between case class and class:
+In Scala, both regular classes and case classes are used to define data structures and create objects. Case classes are a specific type of class in Scala optimized for modeling immutable data and working well with pattern matching. They are typically used for simpler data structures, such as representing records or simple entities, where concise syntax and built-in functionality like structural equality and pattern matching support are beneficial.
+1. Immutable by Default:
+
+Case classes are designed to be immutable by default. This means that once you create an instance of a case class, you cannot modify its fields. This immutability is a fundamental characteristic of case classes and is achieved by declaring fields as val (immutable) rather than var (mutable).
+2. Concise Syntax:
+
+Case classes have a concise syntax for defining classes. In a case class definition, you don't need to explicitly specify getters, setters, equals, hashCode, and toString methods; they are generated automatically. This concise syntax is particularly useful for defining simple data structures.
+3. Structural Equality:
+
+Case classes have built-in structural equality, which means that two case class instances with the same field values are considered equal. This is done by automatically generating an equals method that compares the content of the objects, not just their references.
+4. Pattern Matching:
+
+Case classes are designed to work seamlessly with pattern matching. Pattern matching is a powerful feature in Scala, and case classes are a natural fit for this because they provide a convenient way to destructure objects in pattern matching expressions.
+5. Copy Method:
+
+Case classes automatically generate a copy method, which allows you to create a new instance of the case class with some fields updated. This is a useful feature for creating modified copies of objects while keeping most of the original values.
+6. Serialization Support:
+
+Case classes provide built-in support for serialization and deserialization. This makes them suitable for use in distributed systems, for example, in Akka actors.
+7. Regular Classes:
+
+Regular classes, on the other hand, do not have the above features by default. You need to manually implement methods like equals, hashCode, toString, and write your own copy methods if needed. Regular classes are typically used for more complex data structures or when mutability is required.
