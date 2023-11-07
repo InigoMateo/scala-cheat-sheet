@@ -57,7 +57,7 @@ end MyClass
 
 new MyClass(1, 2, 3) // creates a new object of type
 ```
-
+*this* references the current object, *assert*(<condition>) issues AssertionError if condition is not met. See scala.Predef for *require*, *assume* and *assert*.
 
 ## **FAQs**
 
@@ -214,3 +214,30 @@ Case classes provide built-in support for serialization and deserialization. Thi
 7. Regular Classes:
 
 Regular classes, on the other hand, do not have the above features by default. You need to manually implement methods like equals, hashCode, toString, and write your own copy methods if needed. Regular classes are typically used for more complex data structures or when mutability is required.
+
+### What are the associative left or rigt property in scala?
+1. Left-Associative Operator Example:
+
+The + operator for addition is a left-associative operator. When you use it in a chain, the expressions are evaluated from left to right.
+``` scala
+val result = 1 + 2 + 3
+```
+In this example, the left-associative behavior means that the expression is evaluated as follows:
+
+    1 + 2 is evaluated first, resulting in 3.
+    Then, 3 + 3 is evaluated, resulting in the final value of 6.
+
+So, result will be 6.
+
+Right-Associative Operator Example:
+
+The :: operator for adding an element to the beginning of a list is right-associative. When you use it in a chain, the expressions are evaluated from right to left.
+``` scala
+val myList = 1 :: 2 :: 3 :: Nil
+```
+In this example, the right-associative behavior means that the expression is evaluated as follows:
+
+    3 :: Nil is evaluated first, resulting in a new list containing only the element 3.
+    Then, 2 :: (the result of the previous step) is evaluated, resulting in a new list containing 2 and 3.
+    Finally, 1 :: (the result of the previous step) is evaluated, resulting in the final list List(1, 2, 3).
+So, myList will be List(1, 2, 3).

@@ -36,6 +36,9 @@ class mammal extends animal {
   override def toString: String = s"mammal: $name"
 }
 
+val dog = new mammal("kuke")
+println(dog.toString)
+
 object dragon {
   def main(args: Array[String]): Unit = {
     val animal1 = new animal("reptile")
@@ -50,3 +53,5 @@ object dragon {
 
 println(dragon.toString)
 println(dragon.toString)
+
+
