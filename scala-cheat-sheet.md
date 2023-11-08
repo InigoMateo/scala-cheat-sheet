@@ -58,6 +58,8 @@ end MyClass
 new MyClass(1, 2, 3) // creates a new object of type
 ```
 *this* references the current object, *assert*(<condition>) issues AssertionError if condition is not met. See scala.Predef for *require*, *assume* and *assert*.
+## Operators
+The associativity of an operator is determined by its last character: Right-associative if ending with :, Left-associative otherwise. See "FAQs" for more details.
 
 ## **FAQs**
 
@@ -193,29 +195,158 @@ class Child extends Parent {
 ```
 ### Difference between case class and class:
 In Scala, both regular classes and case classes are used to define data structures and create objects. Case classes are a specific type of class in Scala optimized for modeling immutable data and working well with pattern matching. They are typically used for simpler data structures, such as representing records or simple entities, where concise syntax and built-in functionality like structural equality and pattern matching support are beneficial.
-1. Immutable by Default:
+1. **Immutable by Default**:
 
 Case classes are designed to be immutable by default. This means that once you create an instance of a case class, you cannot modify its fields. This immutability is a fundamental characteristic of case classes and is achieved by declaring fields as val (immutable) rather than var (mutable).
-2. Concise Syntax:
+
+2. **Concise Syntax**:
 
 Case classes have a concise syntax for defining classes. In a case class definition, you don't need to explicitly specify getters, setters, equals, hashCode, and toString methods; they are generated automatically. This concise syntax is particularly useful for defining simple data structures.
-3. Structural Equality:
+
+3. **Structural Equality:**
 
 Case classes have built-in structural equality, which means that two case class instances with the same field values are considered equal. This is done by automatically generating an equals method that compares the content of the objects, not just their references.
-4. Pattern Matching:
+
+4. **Pattern Matching:**
 
 Case classes are designed to work seamlessly with pattern matching. Pattern matching is a powerful feature in Scala, and case classes are a natural fit for this because they provide a convenient way to destructure objects in pattern matching expressions.
-5. Copy Method:
+
+5. **Copy Method:**
 
 Case classes automatically generate a copy method, which allows you to create a new instance of the case class with some fields updated. This is a useful feature for creating modified copies of objects while keeping most of the original values.
-6. Serialization Support:
+
+6. **Serialization Support:**
 
 Case classes provide built-in support for serialization and deserialization. This makes them suitable for use in distributed systems, for example, in Akka actors.
-7. Regular Classes:
+
+7. **Regular Classes:**
 
 Regular classes, on the other hand, do not have the above features by default. You need to manually implement methods like equals, hashCode, toString, and write your own copy methods if needed. Regular classes are typically used for more complex data structures or when mutability is required.
 
-### What are the associative left or rigt property in scala?
+### Class hierarchy. Inheritance and Interfaces.
+What is class hierarchy? class hierarchies refer to the organization of classes in a hierarchical structure, where classes inherit properties and behaviors from parent classes, creating a relationship between classes. These hierarchies can be built using inheritance and interfaces.
+1. Inheritance: 
+
+Inheritance allows you to create new classes that are based on existing classes. The new class (subclass or derived class) inherits the fields and methods of the existing class (superclass or base class). This forms a parent-child relationship, where the subclass is a specialized version of the superclass. You can use the **extends** keyword to inherit from a class.
+``` scala
+class Animal(name: String) {
+  def speak(): Unit = {
+    println(s"$name makes a sound.")
+  }
+}
+
+class Dog(name: String, breed: String) extends Animal(name) {
+  def bark(): Unit = {
+    println(s"$name, a $breed dog, barks loudly.")
+  }
+}
+
+// Create instances of the classes
+val genericAnimal = new Animal("Generic Animal")
+val dog = new Dog("Buddy", "Golden Retriever")
+
+// Call methods on the instances
+genericAnimal.speak()
+dog.speak() // Inherited from Animal
+dog.bark()
+```
+2. Interfaces and Traits: 
+ 
+Scala supports both interfaces and traits for building class hierarchies. Interfaces define a contract that implementing classes must adhere to. Traits are similar to interfaces but can also provide concrete implementations. A class can mix in multiple traits using the **with** keyword.
+``` scala
+// Define traits with some methods
+trait Speaker {
+  def speak(): Unit
+}
+
+trait Singer {
+  def sing(): Unit
+}
+
+trait Dancer {
+  def dance(): Unit
+}
+
+// Create a class that implements multiple traits
+class Performer(name: String) extends Speaker with Singer with Dancer {
+  def speak(): Unit = {
+    println(s"$name is speaking.")
+  }
+
+  def sing(): Unit = {
+    println(s"$name is singing.")
+  }
+
+  def dance(): Unit = {
+    println(s"$name is dancing.")
+  }
+}
+
+// Create an instance of the class
+val performer = new Performer("Alice")
+
+// Call methods from the implemented traits
+performer.speak()
+performer.sing()
+performer.dance()
+```
+### Difference between Interface and Trait
+In Scala, traits and interfaces are both mechanisms for defining contracts that a class must adhere to. They enable code reuse and multiple inheritance of behavior.
+1. Trait:
+
+A trait is a special construct in Scala that is similar to an interface in Java, but it can also contain concrete method implementations. Traits are used to define a set of abstract methods (those that have to be override and define in the subclass) and/or concrete methods (those already define in the trait) that can be mixed into a class.
+```scala
+trait Speaker {
+  //abstract method
+  def speak(): Unit
+  //concrete method
+  def greet(): Unit = {
+    println("Hello!")
+  }
+}
+
+class Person(name: String) extends Speaker {
+  def speak(): Unit = {
+    println(s"My name is $name.")
+  }
+}
+```
+2. Interface:
+
+In Scala, interfaces are similar to traits but are primarily used to define contracts. An interface cannot contain concrete method implementations; it only defines abstract methods that implementing classes must provide. Interfaces in Scala are often referred to as "pure abstract traits."
+```scala
+trait Speaker {
+  def speak(): Unit
+}
+
+class Person(name: String) extends Speaker {
+  def speak(): Unit = {
+    println(s"My name is $name.")
+  }
+}
+```
+### Abstract class, what is it?
+An abstract class in Scala is a class that cannot be instantiated on its own and is meant to be used as a base class or blueprint for other classes. Abstract classes can contain both abstract (unimplemented) and concrete (implemented) methods.
+```scala
+abstract class Shape {
+  def area: Double // Abstract method
+  def perimeter: Double // Abstract method
+  def printDetails(): Unit = {
+    println(s"Area: $area, Perimeter: $perimeter")
+  }
+}
+//must implement all the abstract method defined in the abstract class
+class Circle(radius: Double) extends Shape {
+  def area: Double = math.Pi * radius * radius
+  def perimeter: Double = 2 * math.Pi * radius
+}
+//must implement all the abstract method defined in the abstract class
+class Rectangle(width: Double, height: Double) extends Shape {
+  def area: Double = width * height
+  def perimeter: Double = 2 * (width + height)
+}
+```
+### What are the associative left or right property in scala?
 1. Left-Associative Operator Example:
 
 The + operator for addition is a left-associative operator. When you use it in a chain, the expressions are evaluated from left to right.
