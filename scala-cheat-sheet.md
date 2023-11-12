@@ -60,6 +60,69 @@ new MyClass(1, 2, 3) // creates a new object of type
 *this* references the current object, *assert*(<condition>) issues AssertionError if condition is not met. See scala.Predef for *require*, *assume* and *assert*.
 ## Operators
 The associativity of an operator is determined by its last character: Right-associative if ending with :, Left-associative otherwise. See "FAQs" for more details.
+## Class Organization
+* Classes and objects are organized in packages (package myPackage).
+
+* They can be referenced through import statements (import myPackage.MyClass, import myPackage.*,
+    import myPackage.{MyClass1, MyClass2}, import myPackage.{MyClass1 as A})
+
+* They can also be directly referenced in the code with the fully qualified name (new myPackage.MyClass1)
+
+* All members of packages scala and java.lang as well as all members of the object scala.Predef are automatically imported.
+
+* Traits are similar to Java interfaces, except they can have non-abstract members
+
+## Type parameters
+See in FAQs section
+
+## Variance
+Variance in Scala, often referred to as type variance, is a concept that deals with how subtyping relationships between classes with type parameters are related. Variance specifies whether the subtyping relationship between two classes should be preserved or reversed when their type parameters are considered. It can be marked as covariant (+T), contravariant (-T), or invariant (T). This annotation influences the subtyping relationship between classes with type parameters.
+1. **Covariance:**
+
+A type parameter is marked as covariant using the + symbol. In a covariant type parameter, the subtyping relationship is preserved. This means that if A is a subtype of B, then C[A] is considered a subtype of C[B]. Covariance is suitable for situations where you only produce values of type T.
+``` scala
+class Box[+T](value: T)
+val intBox: Box[Int] = new Box(42)
+val numberBox: Box[Number] = intBox // Preserves subtyping relationship
+//We can safely assign intBox to a Box[Number] because Int is a subtype of Number
+```
+2. **Contravariance:**
+
+A type parameter is marked as contravariant using the - symbol. In a contravariant type parameter, the subtyping relationship is reversed. This means that if A is a subtype of B, then C[B] is considered a subtype of C[A]. Contravariance is useful when you only consume values of type T.
+```scala
+class Consumer[-T]
+val intConsumer: Consumer[Int] = new Consumer[Number]
+//We can safely assign intConsumer to a Consumer[Number] because Int is a supertype of Number. 
+```
+
+3. **Invariance:**
+
+If a type parameter is not marked with any variance annotation, it is considered invariant. Invariance means that there is no subtyping relationship between types with different type parameters. Types with different type parameters are not considered subtypes of each other.
+``` scala
+class Box[T](value: T)
+val intBox: Box[Int] = new Box(42)
+// The following line would result in a compilation error:
+// val numberBox: Box[Number] = intBox
+```
+## Pattern Matching
+When talking about pattern matching we are talking about "match" Can be classes, object, list... data structures.
+```scala
+unknownObject match
+case MyClass(n) => ...
+case MyClass2(a, b) => ...
+```
+Here more pattern matching examples:
+```scala
+(someList: List[T]) match
+case Nil => ...          // empty list
+case x :: Nil => ...     // list with only one element
+case List(x) => ...      // same as above
+case x :: xs => ...      // a list with at least one element. x is bound to the head,
+// xs to the tail. xs could be Nil or some other list.
+case 1 :: 2 :: cs => ... // lists that starts with 1 and then 2
+case (x, y) :: ps => ... // a list where the head element is a pair
+case _ => ...            // default case if none of the above matches
+```
 
 ## **FAQs**
 
@@ -372,3 +435,85 @@ In this example, the right-associative behavior means that the expression is eva
     Then, 2 :: (the result of the previous step) is evaluated, resulting in a new list containing 2 and 3.
     Finally, 1 :: (the result of the previous step) is evaluated, resulting in the final list List(1, 2, 3).
 So, myList will be List(1, 2, 3).
+
+### What are type parameters?
+Type parameters in Scala are a powerful feature of the language that allows you to create generic classes and methods, making your code more flexible and reusable. Type parameters, also known as generics, enable you to define classes and methods that can work with different types while providing type safety (which means that the compiler ensures that you use the correct data types and prevents type-related errors at compile time, by inferring the type).
+``` scala
+class Box[T](value: T) {
+  def getValue: T = value
+}
+
+def findMax[T](elements: Seq[T])(implicit ord: Ordering[T]): Option[T] = {
+  if (elements.isEmpty) None
+  else Some(elements.max)
+}
+
+val intBox = new Box(42) // A generic class instance with type parameter Int
+val stringBox = new Box("Hello") // A generic class instance with type parameter String
+
+val numbers = Seq(3, 7, 1, 5, 9)
+val result1 = findMax(numbers) // Calls the generic method with type parameter Int
+
+val words = Seq("apple", "banana", "cherry")
+val result2 = findMax(words) // Calls the generic method with type parameter String
+```
+It is possible to restrict the type being used:
+``` scala
+    def myFct[T <: TopLevel](arg: T): T = ... // T must derive from TopLevel or be TopLevel
+    def myFct[T >: Level1](arg: T): T = ...   // T must be a supertype of Level1
+    def myFct[T >: Level1 <: TopLevel](arg: T): T = ...
+```
+### What is a singleton object and a companion object in scala?
+**Singleton Object**: In Scala, a singleton object is an object that is defined using the object keyword rather than the class keyword. A singleton object is a single instance of its own type and is created lazily when it is first accessed. It serves as a container for methods and values that are not associated with instances of a class but are still part of the program logic.
+```scala
+object MySingleton {
+  def greet(): Unit = {
+    println("Hello from the singleton object!")
+  }
+}
+```
+In this example, MySingleton is a singleton object with a method greet. You can call this method without creating an instance of the object:
+```scala
+MySingleton.greet()
+```
+**Companion Object**: A companion object in Scala is a singleton object that is defined in the same file as a class and has the same name as the class. The class and its companion object must be defined in the same source file. They have access to each other's private members.
+Companion objects are often used for:
+* Factory Methods: Creating instances of a class with more descriptive or convenient methods.
+* Shared Logic: Placing methods and values that are not instance-specific but are related to the class.
+```scala
+class MyClass {
+  private val secretValue = 42
+}
+
+object MyClass {
+  def revealSecret(instance: MyClass): Unit = {
+    println(s"The secret value is: ${instance.secretValue}")
+  }
+}
+```
+### What is the factory method in companion objects?
+```scala
+class Dog(val name: String, val age: Int)
+
+object Dog {
+  // Factory method to create a Dog with default age
+  def createDogWithName(name: String): Dog = {
+    new Dog(name, age = 2) // Default age is 2
+  }
+
+  // Factory method to create a Dog with specified age
+  def createDogWithNameAndAge(name: String, age: Int): Dog = {
+    new Dog(name, age)
+  }
+}
+
+object FactoryMethodExample extends App {
+  // Using the factory methods to create Dog instances
+  val dog1 = Dog.createDogWithName("Buddy")
+  val dog2 = Dog.createDogWithNameAndAge("Max", 3)
+
+  // Outputting information about the dogs
+  println(s"Dog 1: ${dog1.name}, Age: ${dog1.age}")
+  println(s"Dog 2: ${dog2.name}, Age: ${dog2.age}")
+}
+```
