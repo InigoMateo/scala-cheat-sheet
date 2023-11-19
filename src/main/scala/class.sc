@@ -59,3 +59,77 @@ class Rectangle(width: Double, height: Double) extends Shape {
   def perimeter: Double = 2 * (width + height)
 }
 
+//Contravariance
+class Animal
+class Dog extends Animal
+
+trait Consumer[-T] {
+  def consume(value: T): Unit
+}
+
+class AnimalConsumer extends Consumer[Animal] {
+  def consume(value: Animal): Unit = println(s"Consuming animal: $value")
+}
+
+val animalConsumer: Consumer[Animal] = new AnimalConsumer
+
+val dogConsumer: Consumer[Dog] = animalConsumer // Valid due to contravariance
+dogConsumer.consume(new Dog)
+animalConsumer.consume(new Animal)
+
+
+//Can i instantiate a trait
+trait A
+trait B {
+  def method(): Unit= println("hello")
+}
+//So basically what is happening here is that the "new A{}" creates an anonymous class "A" that extends trait A
+val traitA1 = new A {}
+//Then traitA1 and traitA2 are objects.
+val traitA2 = new B {}
+
+
+//Can i use a trait in scala as a referenced type when declaring an object, like here:
+class Abc
+
+trait Interface[T]{def hello():Unit={println("hello")}}
+
+class B extends Interface[Abc]{def break():Unit={println("end")}}
+
+val AbcObject: Interface[Abc] = new B
+AbcObject.hello()
+//You can see we can't use the methods defined in class B, we can access both if we declare AbcObject as type B.
+//AbcObject.break()
+val DefObject = new B
+DefObject.hello()
+DefObject.break()
+
+
+//This is an example comparably to base classes as Seq, Map, etc.
+trait MyTrait {
+  def hello(): Unit
+}
+
+object MyTrait {
+  def staticMethod(): Unit = {
+    println("This is a static method in the companion object of MyTrait")
+  }
+}
+
+class MyClass extends MyTrait {
+  def hello(): Unit = {
+    println("Hello from MyClass!")
+  }
+}
+
+object Main extends App {
+  val myObject: MyTrait = new MyClass
+  myObject.hello()
+
+  // Accessing the static method from the companion object
+  MyTrait.staticMethod()
+}
+
+val hwlo = Seq.hashCode()
+
+

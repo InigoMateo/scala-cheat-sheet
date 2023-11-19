@@ -123,6 +123,28 @@ case 1 :: 2 :: cs => ... // lists that starts with 1 and then 2
 case (x, y) :: ps => ... // a list where the head element is a pair
 case _ => ...            // default case if none of the above matches
 ```
+## Base Classes: Iterable, Seq, Set & Map
+Let's talk about the base traits in the Scala collections hierarchy. The key collection traits are:
+
+1. Iterable:
+    * The base trait for all iterable collections.
+    * It defines operations for traversing the collection, such as foreach, map, and filter.
+    * Subtypes include List, Set, Seq, etc.
+
+2. Seq:
+    * The base trait for sequences (ordered collections).
+    * It extends Iterable and adds methods for indexing and ordering elements.
+    * Subtypes include List, Vector, Array, etc.
+
+3. Set:
+    * The base trait for sets (unordered collections with no duplicate elements).
+    * It extends Iterable and adds set-specific operations.
+    * Subtypes include HashSet, TreeSet, etc.
+
+4. Map:
+    * The base trait for maps (collections of key-value pairs).
+    * It extends Iterable and adds map-specific operations.
+    * Subtypes include HashMap, TreeMap, etc.
 
 ## **FAQs**
 
@@ -517,3 +539,164 @@ object FactoryMethodExample extends App {
   println(s"Dog 2: ${dog2.name}, Age: ${dog2.age}")
 }
 ```
+### Scala data types:
+Scala has all the same data types as Java, with the same memory footprint and precision. Following is the table giving details about all the data types available in Scala 
+1. Byte: 8 bit signed value. Range from -128 to 127
+2. Short: 16 bit signed value. Range -32768 to 32767
+3. Int: 32 bit signed value. Range -2147483648 to 2147483647
+4. Long: 64 bit signed value. -9223372036854775808 to 9223372036854775807
+5. Float: 32 bit IEEE 754 single-precision float
+6. Double: 64 bit IEEE 754 double-precision float
+7. Char: 16 bit unsigned Unicode character. Range from U+0000 to U+FFFF
+8. String: A sequence of Chars
+9. Boolean: Either the literal true or the literal false
+10. Unit: Corresponds to no value
+11. Null: null or empty reference
+12. Nothing: The subtype of every other type; includes no values. It is commonly used to represent the result of operations that result in an exception or do not return a value.
+```scala
+def fail(message: String): Nothing = throw new RuntimeException(message)
+```
+13. Any: The supertype of any type; any object is of type Any. Bear in mind non-null values.
+14. AnyRef: is the root class of all reference types. All types except the value types descend from this class.
+
+All the data types listed above are objects. There are no primitive types like in Java. This means that you can call methods on an Int, Long, etc.
+
+### Value types and Reference types:
+n Scala, there is a distinction between reference types and value types. However, unlike some other languages like Java, Scala does not expose this distinction directly to the programmer in the syntax. Instead, Scala has a unified type system where everything is an object, and primitive types are represented as objects.
+
+Here's a brief overview:
+
+1. Value Types:
+In Scala, types such as Int, Long, Double, Char, Boolean, etc., are considered value types.
+Despite these types having a syntax similar to primitive types in other languages, they are implemented as objects in Scala.
+Scala provides a mechanism called "value classes" to enable efficient representation of certain value types.
+
+2. Reference Types:
+Reference types in Scala are classes, traits, and objects that you define.
+Classes in Scala can be instantiated using the new keyword, and they are treated as reference types.
+
+### Option
+Option is a data type in Scala. It is a container type that represents an optional value. An Option can either be Some(value), where value is present, or None, indicating the absence of a value. The Option type is part of Scala's standard library and is commonly used to handle scenarios where a value may or may not be available.
+
+Here's a brief explanation of Option:
+
+- Some(value):
+    Represents the presence of a value.
+    value is the actual value that is present.
+    Example: Some("Hello, Scala!")
+
+- None:
+    Represents the absence of a value.
+    Example: None
+
+Pattern matching can also be used for Option values. Some
+functions (like Map.get) return a value of type Option[T] which
+is either a value of type Some[T] or the value None
+
+### Nil, Set.empty, Map.empty & None
+It represents the empty list, which is a special case of a linked list.
+
+In addition to lists, Nil is not typically used with other collection types. For example, when working with other collection types like Set or Map, you would typically use the appropriate empty instance for that collection type.
+
+Here are a few examples:
+
+1. List with Nil:
+```scala
+val myList: List[Int] = 1 :: 2 :: 3 :: Nil
+```
+2. Set with empty Set:
+```scala
+val mySet: Set[Int] = Set.empty
+```
+3. Map with empty Map:
+```scala
+val myMap: Map[String, Int] = Map.empty
+```
+4. Option with None:
+```scala
+    val myOption: Option[String] = None
+```
+While Nil is specific to lists, the concept of representing an empty collection with a specific instance is common across various collection types in Scala. Each collection type typically has its own way of representing an empty instance (e.g., Set.empty, Map.empty, None for Option).
+
+### Ordered and Unordered collections
+- Ordered Collections:
+
+An ordered collection is one in which the order of elements is explicitly defined and maintained.
+Operations like map, filter, and foreach maintain the order of elements.
+Examples of ordered collections include List, Seq, and Array.
+
+- Unordered Collections:
+
+An unordered collection does not guarantee any specific order of its elements.
+Operations like map, filter, and foreach do not necessarily maintain the order of elements.
+Examples of unordered collections include Set and Map.
+
+### Inmutable and mutable collections
+- Immutable Collections:
+
+Immutable collections cannot be modified after they are created.
+Operations that appear to modify the collection return a new collection with the desired changes.
+Examples of immutable collections include List, Set, and Map (when created using the default immutable implementations).
+
+- Mutable Collections:
+
+Mutable collections can be modified in-place after creation.
+Operations can directly change the contents of the collection.
+Examples of mutable collections include ArrayBuffer, HashMap, and ListBuffer.
+
+### What is a tuple in scala?
+In Scala, a tuple is an ordered collection of elements. Tuples are a type of ordered collection, and they are immutable, meaning their elements cannot be changed after creation. Tuples are particularly useful when you want to group together a fixed number of items with different types.
+
+### Control Flow statements in scala
+Here are examples of if, for, while, do while, and a similar construct for match in Scala (Scala doesn't have a switch statement like Java):
+
+- if Statement:
+```    scala
+val x = 10
+
+if (x > 5) {
+println("x is greater than 5")
+} else {
+println("x is not greater than 5")
+}
+```
+
+- for Loop:
+```scala
+val numbers = List(1, 2, 3, 4, 5)
+
+for (num <- numbers) {
+println(num)
+}
+```
+
+- while Loop:
+```scala
+var i = 0
+
+while (i < 5) {
+println(i)
+i += 1
+}
+```
+
+- do while Loop:
+```scala
+var j = 0
+
+do {
+println(j)
+j += 1
+} while (j < 5)
+```
+- match Expression (Similar to switch in other languages):
+``` scala
+val day = "Monday"
+
+val result = day match {
+case "Monday" => "Start of the week"
+case "Friday" => "End of the week"
+case _ => "Some other day"
+}
+
+println(result)

@@ -2,6 +2,7 @@
 def cube (x: Int): Int =
   x * x * x
 //Evaluated immediately
+//All this functions "val cube2: Int => Int = (x:Int) => x*x*x" are called anonymous functions or lambda expression.
 val cube2 = (x: Int) => x * x * x
 val cube2Result = cube2(2)
 val cube3: Int => Int = (x: Int) => x * x * x
@@ -44,4 +45,6 @@ val curryingF: Int => Int => Int = f.curried
 val ResultF = f(2,4)
 val curry1 = curryingF(2)
 val curry2 = curry1(4)
+
+val s = 56
 
