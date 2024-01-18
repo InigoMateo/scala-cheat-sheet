@@ -562,7 +562,7 @@ def fail(message: String): Nothing = throw new RuntimeException(message)
 All the data types listed above are objects. There are no primitive types like in Java. This means that you can call methods on an Int, Long, etc.
 
 ### Value types and Reference types:
-n Scala, there is a distinction between reference types and value types. However, unlike some other languages like Java, Scala does not expose this distinction directly to the programmer in the syntax. Instead, Scala has a unified type system where everything is an object, and primitive types are represented as objects.
+In Scala, there is a distinction between reference types and value types. However, unlike some other languages like Java, Scala does not expose this distinction directly to the programmer in the syntax. Instead, Scala has a unified type system where everything is an object, and primitive types are represented as objects.
 
 Here's a brief overview:
 
